@@ -4,8 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class CustomUser(AbstractUser):
-    mobile = models.CharField(max_length=10)
-    profile_pic = models.ImageField(upload_to='profiles/', null=True, blank=True)
+    mobile = models.CharField(max_length=10, blank=True, default='')
+    is_google_user = models.BooleanField(default=False, verbose_name="Sign in via Google")
     address_line1 = models.CharField(max_length=255, null=True, blank=True)
     address_line2 = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)

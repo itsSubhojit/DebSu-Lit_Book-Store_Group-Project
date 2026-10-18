@@ -31,6 +31,8 @@ urlpatterns=[
     path("myorder/", views.myOrders, name="my-orders"),
     path("health/", views.health_check, name="health_check"),
     path("health", views.health_check, name="health_check_no_slash"),
+    path("auth/google/", views.google_login, name="google_oauth_login"),
+    path("auth/google/callback/", views.google_callback, name="google_oauth_callback"),
 ]
 
 

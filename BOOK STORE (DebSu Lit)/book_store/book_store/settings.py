@@ -245,6 +245,14 @@ RAZORPAY_API_KEY = os.environ.get('RAZORPAY_API_KEY', '')
 RAZORPAY_API_SECRET = os.environ.get('RAZORPAY_API_SECRET', '')
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
+# Google OAuth & Neon Auth Settings (Privacy-Preserving & State-Protected)
+NEON_AUTH_URL = os.environ.get('NEON_AUTH_URL', '')
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
+GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET', '')
+GOOGLE_OAUTH_REDIRECT_URI = os.environ.get('GOOGLE_OAUTH_REDIRECT_URI', '')
+
+
+
 # Caching Configuration (Used for Rate Limiting & Dynamic Throttling)
 CACHES = {
     'default': {

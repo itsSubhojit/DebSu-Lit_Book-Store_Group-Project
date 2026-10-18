@@ -88,11 +88,6 @@ class MyChngFrm(UserChangeForm):
             'pattern': r'\d{10}'
         })
     )
-    profile_pic = forms.ImageField(
-        label="Profile Picture",
-        required=False,
-        widget=forms.FileInput(attrs={'class': 'dsl-form-input-file', 'accept': 'image/*'})
-    )
     address_line1 = forms.CharField(
         label="Flat / House / Apartment No.",
         required=False,
@@ -127,7 +122,7 @@ class MyChngFrm(UserChangeForm):
         model = CustomUser
         fields = (
             'first_name', 'last_name', 'email', 'mobile',
-            'profile_pic', 'address_line1', 'address_line2',
+            'address_line1', 'address_line2',
             'city', 'state', 'pincode'
         )
 

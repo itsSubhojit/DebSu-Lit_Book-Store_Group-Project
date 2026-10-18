@@ -37,37 +37,34 @@
             </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" novalidate id="profileForm">
+        <form method="post" novalidate id="profileForm">
             {% csrf_token %}
 
             <!-- Reader Avatar & Header -->
             <div style="text-align: center; margin-bottom: 2.25rem;">
                 <div class="dsl-profile-avatar-wrap">
                     <div class="dsl-profile-avatar-circle" id="avatarPreviewContainer">
-                        {% if request.user.profile_pic %}
-                            <img src="{{ request.user.profile_pic.url }}" alt="{{ request.user.username }}" id="avatarImgPreview" class="dsl-profile-avatar-img" onerror="this.style.display='none'; document.getElementById('avatarFallbackIcon').style.display='block';">
-                            <i class="far fa-user" id="avatarFallbackIcon" style="display: none;"></i>
-                        {% else %}
-                            <i class="far fa-user" id="avatarFallbackIcon"></i>
-                            <img src="" alt="Avatar preview" id="avatarImgPreview" class="dsl-profile-avatar-img" style="display: none;" onerror="this.style.display='none'; document.getElementById('avatarFallbackIcon').style.display='block';">
-                        {% endif %}
+                        <i class="far fa-user" id="avatarFallbackIcon"></i>
                     </div>
-                    <label for="id_profile_pic" class="dsl-profile-avatar-badge" title="Upload new photo">
-                        <i class="fas fa-camera"></i>
-                    </label>
                 </div>
-                <input type="file" name="profile_pic" id="id_profile_pic" accept="image/*" style="display: none;">
 
-                <span class="dsl-kicker" style="margin-top: 0.75rem;">Reader Profile</span>
+                <div style="margin-top: 0.75rem;">
+                    {% if request.user.is_google_user %}
+                        <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.785rem; font-weight: 600;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" style="flex-shrink: 0;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+                            Signed in via Google
+                        </span>
+                    {% else %}
+                        <span class="dsl-kicker">Reader Profile</span>
+                    {% endif %}
+                </div>
+
                 <h1 class="dsl-cart-headline" style="font-size: 2rem; margin: 0.35rem 0 0.25rem 0;">
                     {{ request.user.first_name|default:request.user.username }}'s Account
                 </h1>
                 <p style="color: #64748b; font-size: 0.925rem; margin: 0;">
                     @{{ request.user.username }} · Member of DebSu Lit
                 </p>
-                <small style="display: block; color: #94a3b8; font-size: 0.775rem; margin-top: 0.25rem;">
-                    Click the camera icon to upload a profile photo
-                </small>
             </div>
 
             <!-- ==================== SECTION 1: PERSONAL DETAILS ==================== -->
@@ -215,39 +212,55 @@
                 </div>
             </div>
 
-            <!-- ==================== SECTION 4: SECURITY CONFIRMATION (REQUIRED) ==================== -->
-            <div class="dsl-profile-security-box">
-                <div style="display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.85rem;">
-                    <i class="fas fa-shield-alt" style="color: #1b2a4a; font-size: 1.35rem; margin-top: 0.15rem;"></i>
-                    <div>
-                        <h3 style="font-size: 1rem; font-weight: 700; color: #1b2a4a; margin: 0 0 0.25rem 0;">
-                            Confirm current account password to save
-                        </h3>
-                        <p style="font-size: 0.825rem; color: #475569; margin: 0;">
-                            For your account's protection, please enter your current account password to authorize profile and address changes.
-                        </p>
+            <!-- ==================== SECTION 4: SECURITY CONFIRMATION ==================== -->
+            {% if request.user.has_usable_password %}
+                <div class="dsl-profile-security-box">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.85rem;">
+                        <i class="fas fa-shield-alt" style="color: #1b2a4a; font-size: 1.35rem; margin-top: 0.15rem;"></i>
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 700; color: #1b2a4a; margin: 0 0 0.25rem 0;">
+                                Confirm current account password to save
+                            </h3>
+                            <p style="font-size: 0.825rem; color: #475569; margin: 0;">
+                                For your account's protection, please enter your current account password to authorize profile and address changes.
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="dsl-form-group" style="margin-bottom: 0;">
-                    <label class="dsl-form-label" for="current_password">
-                        Current Account Password <span class="text-danger">*</span>
-                    </label>
-                    <div class="dsl-password-wrap">
-                        <input 
-                            type="password" 
-                            name="current_password" 
-                            id="current_password" 
-                            class="dsl-form-input" 
-                            placeholder="Enter current password" 
-                            required
-                            autocomplete="current-password">
-                        <button type="button" class="dsl-password-toggle-btn" data-target="current_password" aria-label="Toggle password visibility">
-                            <i class="far fa-eye"></i>
-                        </button>
+                    <div class="dsl-form-group" style="margin-bottom: 0;">
+                        <label class="dsl-form-label" for="current_password">
+                            Current Account Password <span class="text-danger">*</span>
+                        </label>
+                        <div class="dsl-password-wrap">
+                            <input 
+                                type="password" 
+                                name="current_password" 
+                                id="current_password" 
+                                class="dsl-form-input" 
+                                placeholder="Enter current password" 
+                                required
+                                autocomplete="current-password">
+                            <button type="button" class="dsl-password-toggle-btn" data-target="current_password" aria-label="Toggle password visibility">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="dsl-profile-security-box" style="background: #f8fafc; border-color: #cbd5e1;">
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" style="flex-shrink: 0;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+                        <div>
+                            <h3 style="font-size: 0.95rem; font-weight: 700; color: #1b2a4a; margin: 0 0 0.2rem 0;">
+                                Google Authenticated Account
+                            </h3>
+                            <p style="font-size: 0.825rem; color: #475569; margin: 0;">
+                                You signed in securely using Google OAuth. Password confirmation is not required to save profile changes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
             <button type="submit" class="dsl-auth-submit-btn" style="margin-top: 1.5rem; font-size: 1rem; padding: 0.95rem;">
                 <i class="fas fa-check-circle mr-1"></i> Save Changes
@@ -288,29 +301,6 @@
             });
         });
 
-        // 2. Profile Avatar Image Instant Preview
-        var fileInput = document.getElementById("id_profile_pic");
-        var previewImg = document.getElementById("avatarImgPreview");
-        var fallbackIcon = document.getElementById("avatarFallbackIcon");
-
-        if (fileInput) {
-            fileInput.addEventListener("change", function(e) {
-                var file = e.target.files && e.target.files[0];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(evt) {
-                        if (previewImg) {
-                            previewImg.src = evt.target.result;
-                            previewImg.style.display = "block";
-                        }
-                        if (fallbackIcon) {
-                            fallbackIcon.style.display = "none";
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
 
         // 3. Mobile Number Numeric Only (max 10 digits)
         var mobileInput = document.getElementById("id_mobile");
@@ -399,7 +389,7 @@
         if (form) {
             form.addEventListener("submit", function(e) {
                 var currentPwd = document.getElementById("current_password");
-                if (currentPwd && !currentPwd.value.trim()) {
+                if (currentPwd && currentPwd.hasAttribute('required') && !currentPwd.value.trim()) {
                     e.preventDefault();
                     alert("Please enter your current account password to authorize saving profile changes.");
                     currentPwd.focus();

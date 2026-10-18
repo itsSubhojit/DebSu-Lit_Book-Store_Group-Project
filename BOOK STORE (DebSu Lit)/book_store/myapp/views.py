@@ -16,6 +16,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from . forms import MyRegFrm, StdRegFrm, MyChngFrm
 from . models import CustomUser, Student, Category, Item, CartItem, Order
 from . ratelimit import get_client_ip, check_rate_limit, record_failed_attempt, clear_failed_attempts
+from . google_auth import (
+    get_google_auth_url,
+    verify_neon_session,
+    exchange_code_for_token,
+    fetch_google_userinfo,
+    get_or_create_google_user,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -80,15 +87,17 @@ def useraccount(request):
 
     if request.method == "POST":
         current_password = request.POST.get('current_password', '').strip()
-        form = MyChngFrm(request.POST, request.FILES, instance=request.user)
+        form = MyChngFrm(request.POST, instance=request.user)
 
-        if not current_password:
-            messages.error(request, 'Current account password is required to authorize profile changes.')
-            return render(request, 'myapp/useraccount.html', {'form': form, 'allItem': allItem, 'categories': categories})
+        # If user has a set password, require it to authorize changes
+        if request.user.has_usable_password():
+            if not current_password:
+                messages.error(request, 'Current account password is required to authorize profile changes.')
+                return render(request, 'myapp/useraccount.html', {'form': form, 'allItem': allItem, 'categories': categories})
 
-        if not request.user.check_password(current_password):
-            messages.error(request, 'Incorrect current account password. Please enter your valid current password.')
-            return render(request, 'myapp/useraccount.html', {'form': form, 'allItem': allItem, 'categories': categories})
+            if not request.user.check_password(current_password):
+                messages.error(request, 'Incorrect current account password. Please enter your valid current password.')
+                return render(request, 'myapp/useraccount.html', {'form': form, 'allItem': allItem, 'categories': categories})
 
         if form.is_valid():
             try:
@@ -198,6 +207,107 @@ def signIn(request):
 def signOut(request):
     logout(request)
     return redirect('/login')
+
+
+# -----------------------------------------------------------------------------
+# Google OAuth 2.0 Views (Privacy-Focused & Neon PostgreSQL Backed)
+# -----------------------------------------------------------------------------
+def google_login(request):
+    """
+    Initiates privacy-preserving Google OAuth 2.0 flow with state and PKCE parameters.
+    """
+    if request.user.is_authenticated:
+        return redirect('/useraccount')
+
+    client_ip = get_client_ip(request)
+    allowed, remaining, retry_after = check_rate_limit(f"google_init:{client_ip}", limit=10, period_seconds=60)
+    if not allowed:
+        messages.error(request, f"Too many sign-in attempts. Please wait {retry_after} second(s).")
+        return redirect('/login')
+
+    auth_url = get_google_auth_url(request)
+    if not auth_url:
+        messages.error(
+            request,
+            "Google sign-in is not configured yet. Please configure GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET."
+        )
+        return redirect('/login')
+
+    return redirect(auth_url)
+
+
+def google_callback(request):
+    """
+    Processes the OAuth 2.0 callback from either Neon Auth or direct Google OAuth:
+    1. Checks if Neon Auth session or token is present.
+    2. Otherwise validates CSRF state and exchanges code for direct Google OAuth.
+    3. Safely provisions or logs in the CustomUser in Neon PostgreSQL.
+    """
+    if request.user.is_authenticated:
+        return redirect('/useraccount')
+
+    # Check for cancellation or error from provider
+    error = request.GET.get('error')
+    if error:
+        logger.info("Google OAuth returned error or user cancelled: %s", error)
+        messages.warning(request, "Google sign-in was cancelled.")
+        return redirect('/login')
+
+    userinfo = None
+    auth_mode = request.session.pop('auth_mode', None)
+
+    # Path A: Neon Auth (Better Auth) Session Verification
+    userinfo = verify_neon_session(request)
+
+    # Path B: Direct Google OAuth (Code & PKCE Exchange)
+    if not userinfo:
+        incoming_state = request.GET.get('state', '').strip()
+        session_state = request.session.pop('google_oauth_state', None)
+
+        if incoming_state and session_state:
+            if incoming_state != session_state:
+                logger.warning("Google OAuth state mismatch: incoming=%s, session=%s", incoming_state, session_state)
+                messages.error(request, "Security verification failed (state mismatch). Please try signing in again.")
+                return redirect('/login')
+
+            code = request.GET.get('code', '').strip()
+            code_verifier = request.session.pop('google_oauth_code_verifier', None)
+            redirect_uri = request.session.pop('google_oauth_redirect_uri', None)
+
+            if code and code_verifier and redirect_uri:
+                token_data = exchange_code_for_token(code, code_verifier, redirect_uri)
+                if token_data and 'access_token' in token_data:
+                    userinfo = fetch_google_userinfo(token_data['access_token'])
+
+    if not userinfo:
+        messages.error(request, "Authentication session expired or invalid. Please try signing in again.")
+        return redirect('/login')
+
+    # Provision or retrieve user from Neon database
+    user, is_new, err_code = get_or_create_google_user(userinfo)
+
+    if err_code == "account_inactive":
+        messages.error(request, "This account is currently deactivated. Please contact support.")
+        return redirect('/login')
+    elif err_code == "unverified_email":
+        messages.error(request, "Your Google email address is not verified. Please verify it with Google first.")
+        return redirect('/login')
+    elif not user:
+        messages.error(request, "Unable to complete Google sign-in. Please try again.")
+        return redirect('/login')
+
+    # Log in user with Django standard ModelBackend
+    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+    if is_new:
+        messages.success(request, f"Welcome to DebSu Lit, {user.first_name or user.username}! Your account has been created via Google.")
+    else:
+        messages.success(request, f"Welcome back, {user.first_name or user.username}!")
+
+    next_url = request.session.pop('google_oauth_next_url', None) or '/useraccount'
+    return redirect(next_url)
+
+
 
 
 def signup(request):

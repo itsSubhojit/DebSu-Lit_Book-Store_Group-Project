@@ -109,11 +109,7 @@
             {% if user.is_authenticated %}
                 <div class="dsl-mobile-user-info">
                     <div class="dsl-mobile-avatar">
-                        {% if request.user.profile_pic %}
-                            <img src="{{ request.user.profile_pic.url }}" alt="{{ request.user.username }}" class="dsl-mobile-avatar-img">
-                        {% else %}
-                            <i class="far fa-user"></i>
-                        {% endif %}
+                        <i class="far fa-user"></i>
                     </div>
                     <div class="dsl-mobile-user-text">
                         <strong class="dsl-mobile-user-name">{{ request.user.first_name|default:request.user.username }}</strong>
