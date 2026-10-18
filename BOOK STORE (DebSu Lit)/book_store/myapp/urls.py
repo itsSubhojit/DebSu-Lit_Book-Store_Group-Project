@@ -33,6 +33,12 @@ urlpatterns=[
     path("health", views.health_check, name="health_check_no_slash"),
     path("auth/google/", views.google_login, name="google_oauth_login"),
     path("auth/google/callback/", views.google_callback, name="google_oauth_callback"),
+    path("terms", views.terms, name="terms"),
+    path("privacy-policy", views.privacy_policy, name="privacy_policy"),
+    path("refund-policy", views.refund_policy, name="refund_policy"),
+    path("shipping-policy", views.shipping_policy, name="shipping_policy"),
+    path("contact", views.contact, name="contact"),
+    path("pricing", views.pricing, name="pricing"),
 ]
 
 

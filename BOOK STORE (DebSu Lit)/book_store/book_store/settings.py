@@ -60,7 +60,21 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't', 'yes')
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '*').split(',') if h.strip()]
 if 'testserver' not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append('testserver')
+
+# Render and cloud deployment host resolution
+render_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip()
+if render_hostname and render_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_hostname)
+
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()]
+if 'https://*.onrender.com' not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append('https://*.onrender.com')
+if render_hostname:
+    render_origin = f"https://{render_hostname}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
+
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
@@ -246,7 +260,17 @@ RAZORPAY_API_SECRET = os.environ.get('RAZORPAY_API_SECRET', '')
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
 
 # Google OAuth & Neon Auth Settings (Privacy-Preserving & State-Protected)
-NEON_AUTH_URL = os.environ.get('NEON_AUTH_URL', '')
+NEON_AUTH_URL = os.environ.get('NEON_AUTH_URL', '').strip()
+if not NEON_AUTH_URL:
+    db_conn = DATABASE_URL or os.environ.get('DATABASE_URL', '')
+    if db_conn and 'neon.tech' in db_conn:
+        import re
+        neon_match = re.search(r'@([a-z0-9\-]+?)(?:-pooler)?\.([a-z0-9\.\-]+neon\.tech)/([a-zA-Z0-9_\-]+)', db_conn)
+        if neon_match:
+            NEON_AUTH_URL = f"https://{neon_match.group(1)}.neonauth.{neon_match.group(2)}/{neon_match.group(3)}/auth"
+    if not NEON_AUTH_URL:
+        NEON_AUTH_URL = 'https://ep-proud-queen-b8qhapsy.neonauth.c-14.us-east-1.aws.neon.tech/neondb/auth'
+
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
 GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET', '')
 GOOGLE_OAUTH_REDIRECT_URI = os.environ.get('GOOGLE_OAUTH_REDIRECT_URI', '')

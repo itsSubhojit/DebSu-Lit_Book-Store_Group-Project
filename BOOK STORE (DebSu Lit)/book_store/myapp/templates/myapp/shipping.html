@@ -1,0 +1,50 @@
+{% load static %}
+{% include './header.html' %}
+
+<main class="dsl-container dsl-policy-container">
+    <article class="dsl-policy">
+        <header class="dsl-policy-header">
+            <span class="dsl-kicker">Delivery &amp; Fulfillment</span>
+            <h1 class="dsl-policy-title">Shipping &amp; Delivery Policy</h1>
+            <p class="dsl-policy-meta">Last Updated: October 18, 2026 · Nationwide Dispatch Across India</p>
+        </header>
+
+        <div class="dsl-policy-summary">
+            <strong>Summary:</strong> We carefully pack and dispatch orders within 24 to 48 hours. Orders across major Indian metros are delivered in 3 to 5 business days, with real-time tracking provided upon dispatch.
+        </div>
+
+        <div class="dsl-policy-body">
+            <h2>1. Dispatch Timelines</h2>
+            <p>Orders placed Monday through Saturday before 3:00 PM IST are processed and packed within <strong>24 to 48 hours</strong>. Orders placed on Sundays or national holidays are dispatched on the subsequent business day.</p>
+
+            <h2>2. Estimated Delivery Transit Times</h2>
+            <ul>
+                <li><strong>Metro Cities (Kolkata, Delhi, Mumbai, Bengaluru, Chennai, Hyderabad):</strong> 2 to 4 business days.</li>
+                <li><strong>Tier-2 &amp; Tier-3 Cities:</strong> 4 to 6 business days.</li>
+                <li><strong>North-East, J&amp;K, and Remote Locations:</strong> 6 to 9 business days.</li>
+            </ul>
+
+            <h2>3. Shipping Rates</h2>
+            <p>We believe in transparent pricing:</p>
+            <ul>
+                <li><strong>Standard Orders:</strong> Free standard shipping on all orders above &#8377;499.</li>
+                <li><strong>Sub-Threshold Orders:</strong> A flat delivery fee of &#8377;49 is applied at checkout.</li>
+            </ul>
+
+            <h2>4. Parcel Packaging &amp; Courier Partners</h2>
+            <p>All books are cushioned with reinforced cardboard mailers to prevent corner dents and weather damage in transit. We partner with reliable Indian logistics carriers including Blue Dart, Delhivery, and India Post Speed Post.</p>
+
+            <h2>5. Order Tracking</h2>
+            <p>Once your order has shipped, you will receive an SMS and email notification containing your airway bill (AWB) number and direct parcel tracking link.</p>
+
+            <div class="dsl-policy-contact-box">
+                <h3 style="margin-top: 0;">Tracking Inquiries</h3>
+                <p>If your package is delayed past the estimated window, contact fulfillment at:</p>
+                <p>Email: shipping@debsulit.com<br>
+                Track Online: Visit your <a href="{% url 'my-orders' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">My Orders</a> page.</p>
+            </div>
+        </div>
+    </article>
+</main>
+
+{% include './footer.html' %}

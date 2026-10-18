@@ -227,10 +227,14 @@ def google_login(request):
 
     auth_url = get_google_auth_url(request)
     if not auth_url:
-        messages.error(
-            request,
-            "Google sign-in is not configured yet. Please configure GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET."
-        )
+        auth_err = request.session.pop('auth_error_message', None)
+        if auth_err:
+            messages.error(request, auth_err)
+        else:
+            messages.error(
+                request,
+                "Google sign-in is not configured yet. Please configure Neon Auth or set GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET."
+            )
         return redirect('/login')
 
     return redirect(auth_url)
@@ -781,3 +785,27 @@ def stdUpd(request, id):
 def stdAdmin(request):
     allfeatured = Category.objects.all()
     return render(request, 'myapp/stdAdmin.html', {'allfeatured': allfeatured})
+
+
+def terms(request):
+    return render(request, 'myapp/terms.html')
+
+
+def privacy_policy(request):
+    return render(request, 'myapp/privacy.html')
+
+
+def refund_policy(request):
+    return render(request, 'myapp/refund.html')
+
+
+def shipping_policy(request):
+    return render(request, 'myapp/shipping.html')
+
+
+def contact(request):
+    return render(request, 'myapp/contact.html')
+
+
+def pricing(request):
+    return render(request, 'myapp/pricing.html')

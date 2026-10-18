@@ -31,13 +31,36 @@ def generate_pkce_pair():
     return code_verifier, code_challenge
 
 
+def resolve_neon_auth_url() -> str:
+    """
+    Dynamically resolves the Neon Auth URL:
+    1. settings.NEON_AUTH_URL or os.environ['NEON_AUTH_URL']
+    2. Auto-derived from settings.DATABASE_URL or os.environ['DATABASE_URL'] if pointing to neon.tech
+    3. Project default Neon Auth endpoint for DebSu Lit
+    """
+    configured = (getattr(settings, 'NEON_AUTH_URL', '') or os.environ.get('NEON_AUTH_URL', '')).strip()
+    if configured:
+        return configured.rstrip('/')
+
+    db_url = getattr(settings, 'DATABASE_URL', '') or os.environ.get('DATABASE_URL', '')
+    if db_url and 'neon.tech' in db_url:
+        match = re.search(r'@([a-z0-9\-]+?)(?:-pooler)?\.([a-z0-9\.\-]+neon\.tech)/([a-zA-Z0-9_\-]+)', db_url)
+        if match:
+            endpoint = match.group(1)
+            domain = match.group(2)
+            dbname = match.group(3)
+            return f"https://{endpoint}.neonauth.{domain}/{dbname}/auth"
+
+    return "https://ep-proud-queen-b8qhapsy.neonauth.c-14.us-east-1.aws.neon.tech/neondb/auth"
+
+
 def get_neon_auth_url(request):
     """
     Initiates Google Social Login via Neon Auth (Better Auth).
     Neon provides pre-configured Shared Keys for Google OAuth so no
     Google Cloud Console configuration is required.
     """
-    neon_auth_url = getattr(settings, 'NEON_AUTH_URL', '').rstrip('/')
+    neon_auth_url = resolve_neon_auth_url()
     if not neon_auth_url:
         return None
 
@@ -51,6 +74,12 @@ def get_neon_auth_url(request):
     elif 'testserver' in callback_url:
         callback_url = callback_url.replace('testserver', 'localhost:8000')
         origin = 'http://localhost:8000'
+    else:
+        # Enforce HTTPS on cloud hosts (Render, Railway, etc. behind reverse proxy)
+        if callback_url.startswith('http://'):
+            callback_url = 'https://' + callback_url[7:]
+        if origin.startswith('http://'):
+            origin = 'https://' + origin[7:]
 
     next_url = request.GET.get('next') or request.POST.get('next')
     if next_url and next_url.startswith('/') and not next_url.startswith('//'):
@@ -72,10 +101,27 @@ def get_neon_auth_url(request):
             redirect_target = data.get('url')
             if redirect_target:
                 request.session['auth_mode'] = 'neon'
+                request.session.pop('auth_error_message', None)
                 return redirect_target
-        logger.info("Neon Auth social init returned HTTP %s: %s", resp.status_code, resp.text)
+
+        err_data = {}
+        try:
+            err_data = resp.json()
+        except Exception:
+            pass
+        err_msg = err_data.get('message') or err_data.get('error') or resp.text
+        logger.warning("Neon Auth social init returned HTTP %s: %s", resp.status_code, resp.text)
+
+        if 'INVALID_CALLBACKURL' in str(err_msg) or resp.status_code == 403:
+            request.session['auth_error_message'] = (
+                f"Neon Auth origin authorization required: '{origin}' is not yet in Neon's authorized domains. "
+                f"In your Neon Console (neon.tech) -> Project -> Auth -> Configuration -> Domains, add: '{origin}'"
+            )
+        else:
+            request.session['auth_error_message'] = f"Neon Auth error ({resp.status_code}): {err_msg}"
     except Exception as e:
         logger.warning("Could not initiate Neon Auth social login: %s", e)
+        request.session['auth_error_message'] = f"Neon Auth connection error: {str(e)}"
 
     return None
 
@@ -195,7 +241,7 @@ def verify_neon_session(request):
         logger.warning("Recent Neon DB session query check failed: %s", e)
 
     # 3. HTTP endpoint check on Neon Auth /get-session
-    neon_auth_url = getattr(settings, 'NEON_AUTH_URL', '').rstrip('/')
+    neon_auth_url = resolve_neon_auth_url()
     if neon_auth_url:
         try:
             cookie_header = "; ".join([f"{k}={v}" for k, v in request.COOKIES.items()])
@@ -327,6 +373,7 @@ def get_or_create_google_user(userinfo: dict):
         if not existing_user.is_active:
             return None, False, "account_inactive"
 
+        updated = False
         # Mark user as having signed in via Google
         if not getattr(existing_user, 'is_google_user', False):
             existing_user.is_google_user = True
