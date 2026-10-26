@@ -2734,11 +2734,20 @@ body.dsl-body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .dsl-auth-main {
+    padding: 2rem 1.25rem;
+  }
 }
 
 .dsl-auth-card {
   width: 100%;
   max-width: 480px;
+  box-sizing: border-box;
 }
 
 .dsl-form-group {
@@ -2882,6 +2891,8 @@ body.dsl-body {
 
 .dsl-auth-submit-btn {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background-color: #1e3562;
   color: #ffffff;
   border: none;
@@ -2896,6 +2907,72 @@ body.dsl-body {
 
 .dsl-auth-submit-btn:hover {
   background-color: #142444;
+}
+
+/* Auth Divider ("or") */
+.dsl-auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.35rem 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dsl-auth-divider-line {
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dsl-auth-divider-text {
+  padding: 0 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Google OAuth Social Sign-In Button */
+.dsl-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.dsl-google-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.dsl-google-btn svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 380px) {
+  .dsl-google-btn {
+    font-size: 0.875rem;
+    padding: 0.75rem 0.5rem;
+    gap: 0.5rem;
+  }
 }
 
 .dsl-auth-footer-link {

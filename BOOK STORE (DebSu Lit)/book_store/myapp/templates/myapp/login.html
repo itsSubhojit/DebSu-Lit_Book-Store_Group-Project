@@ -7,7 +7,7 @@
     <title>Sign In – DebSu Lit</title>
     <!-- Fonts & Tokens -->
     <link rel="stylesheet" href="{% static 'myapp/css/tokens.css' %}?v=10">
-    <link rel="stylesheet" href="{% static 'myapp/css/dsl-style.css' %}?v=15">
+    <link rel="stylesheet" href="{% static 'myapp/css/dsl-style.css' %}?v=16">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="dsl-body">
@@ -116,13 +116,13 @@
                 </button>
             </form>
 
-            <div style="display: flex; align-items: center; text-align: center; margin: 1.35rem 0; color: #94a3b8; font-size: 0.85rem;">
-                <div style="flex: 1; border-bottom: 1px solid #e2e8f0;"></div>
-                <span style="padding: 0 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">or</span>
-                <div style="flex: 1; border-bottom: 1px solid #e2e8f0;"></div>
+            <div class="dsl-auth-divider">
+                <div class="dsl-auth-divider-line"></div>
+                <span class="dsl-auth-divider-text">or</span>
+                <div class="dsl-auth-divider-line"></div>
             </div>
 
-            <a href="{% url 'google_oauth_login' %}" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 0.8rem 1rem; background-color: #ffffff; color: #1e293b; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.backgroundColor='#f8fafc'; this.style.borderColor='#94a3b8';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.borderColor='#cbd5e1';">
+            <a href="{% url 'google_oauth_login' %}" class="dsl-google-btn" style="box-sizing: border-box; width: 100%; max-width: 100%;">
                 <svg width="20" height="20" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
