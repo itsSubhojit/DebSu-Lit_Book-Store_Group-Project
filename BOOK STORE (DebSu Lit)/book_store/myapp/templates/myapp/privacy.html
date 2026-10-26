@@ -1,0 +1,95 @@
+{% load static %}
+{% include './header.html' %}
+
+<main class="dsl-container dsl-policy-container">
+    <article class="dsl-policy">
+        <header class="dsl-policy-header">
+            <span class="dsl-kicker">Data Protection &amp; Trust</span>
+            <h1 class="dsl-policy-title">Privacy Policy</h1>
+            <p class="dsl-policy-meta">Last Updated: October 18, 2026 · Committed to Reader Privacy</p>
+        </header>
+
+        <div class="dsl-policy-summary">
+            <strong>In Short:</strong> We collect only the essential information needed to create your bookstore account, process your orders, and safely deliver your reading selections. We never sell, rent, or trade your personal data. Online payments are handled end-to-end by Razorpay, so we never see or store your payment card numbers, UPI PINs, or bank passwords.
+        </div>
+
+        <div class="dsl-policy-body">
+            <h2>1. Who Is Responsible for Your Data</h2>
+            <p>DebSu Lit is operated by <strong>DebSu Lit Books Private Limited</strong>, located at 12/A College Street, 2nd Floor, Kolkata, West Bengal - 700073, India ("DebSu Lit", "we", "us"). For any privacy queries or data protection requests, you can contact our privacy desk at <a href="mailto:privacy@debsulit.com" style="color: var(--dsl-brand-primary); font-weight: 600;">privacy@debsulit.com</a>.</p>
+
+            <h2>2. Information We Collect</h2>
+            <ul>
+                <li><strong>Account Details:</strong> When you register on DebSu Lit, we collect your username, email address, first and last name, and your password (stored exclusively using one-way cryptographic salted hashing, never in plain text).</li>
+                <li><strong>Google Sign-In:</strong> If you sign in via Google OAuth, Google provides us with your verified email address, full name, and avatar image. We never request or receive your Google password.</li>
+                <li><strong>Order &amp; Delivery Details:</strong> When an order is placed, we store the items selected, delivery street address, city, state, postal pincode, order timestamp, order status, and the Razorpay transaction reference identifier.</li>
+                <li><strong>Technical &amp; Session Data:</strong> To guarantee secure transactions, our cloud servers record basic request metadata (IP address, user-agent string, and operating session tokens).</li>
+            </ul>
+            <p>We do <strong>not</strong> collect or store credit card numbers, CVV codes, net-banking passwords, or UPI credentials. All financial authorization takes place inside Razorpay's PCI-DSS Level 1 certified vault.</p>
+
+            <h2>3. Why We Process Your Information</h2>
+            <p>We process your personal information strictly for legitimate commercial and operational purposes:</p>
+            <ul>
+                <li>To authenticate your identity and administer your reader account.</li>
+                <li>To compute cart totals, verify payments, and coordinate book parcel fulfillment.</li>
+                <li>To dispatch transactional updates regarding order confirmation, dispatch tracking, and invoice delivery.</li>
+                <li>To process eligible refunds and customer assistance claims.</li>
+                <li>To prevent fraud, brute-force attempts, and unauthorized platform manipulation.</li>
+            </ul>
+
+            <h2>4. Third Parties We Share Information With</h2>
+            <p>We work with trusted enterprise service providers solely to operate our bookstore service:</p>
+            <ul>
+                <li><strong>Razorpay:</strong> To process secure payment transactions under strict financial encryption standards.</li>
+                <li><strong>Google Identity:</strong> For readers choosing Google OAuth single sign-on.</li>
+                <li><strong>Logistics Partners:</strong> Verified Indian courier services (including Blue Dart, Delhivery, and India Post) receive your recipient name and delivery destination solely to complete physical parcel delivery.</li>
+                <li><strong>Infrastructure Providers:</strong> Managed database hosting (Neon PostgreSQL), cloud application hosting (Render), and media image storage (Cloudinary) operate under strict contractual data protection agreements.</li>
+                <li><strong>Legal Authorities:</strong> We disclose records only when explicitly required by Indian statutory law or court summons.</li>
+            </ul>
+            <p><strong>We do not sell or monetize your personal information to third-party data brokers or marketing networks.</strong></p>
+
+            <h2>5. Cookies &amp; Storage Technologies</h2>
+            <p>DebSu Lit utilizes only strictly necessary, privacy-preserving first-party cookies:</p>
+            <ul>
+                <li><strong>Session Cookie (<code>sessionid</code>):</strong> Keeps you securely signed in as you browse between catalog pages.</li>
+                <li><strong>Security Cookie (<code>csrftoken</code>):</strong> Protects your account and checkout actions against Cross-Site Request Forgery (CSRF) attacks.</li>
+            </ul>
+            <p>We do not use invasive third-party cross-site advertising trackers or behavioural tracking scripts.</p>
+
+            <h2>6. Data Security &amp; Encryption Standards</h2>
+            <p>We apply defense-in-depth security principles across our platform:</p>
+            <ul>
+                <li>All network communications are strictly enforced over Transport Layer Security (TLS/HTTPS).</li>
+                <li>User passwords are protected with PBKDF2 with SHA-256 password hashing.</li>
+                <li>Stateful Cross-Site Request Forgery (CSRF) tokens and Proof Key for Code Exchange (PKCE) protect authentication flows.</li>
+                <li>Direct server-side verification of payment webhooks prevents client-side price modification.</li>
+            </ul>
+
+            <h2>7. Your Rights &amp; Access Controls</h2>
+            <p>In accordance with the Digital Personal Data Protection Act (DPDP), readers hold the right to:</p>
+            <ul>
+                <li>Review and download the personal data associated with your profile via your <a href="{% url 'useraccountpage' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Account Settings</a>.</li>
+                <li>Request rectification of inaccurate contact details or shipping addresses.</li>
+                <li>Request complete account deletion and erasure of non-statutory records by writing to our privacy desk.</li>
+            </ul>
+
+            <h2>8. Grievance Officer &amp; Official Contact</h2>
+            <p>In compliance with the Information Technology Act, 2000 and the Consumer Protection (E-Commerce) Rules, 2020, our designated Grievance Officer is:</p>
+            <div style="background: var(--dsl-bg-surface-warm); border: 1px solid var(--dsl-border-subtle); padding: 1.25rem; border-radius: var(--dsl-radius-md); margin-bottom: 1.5rem;">
+                <strong>Grievance Officer:</strong> Debansu Ghosh<br>
+                <strong>Company:</strong> DebSu Lit Books Private Limited<br>
+                <strong>Registered Office:</strong> 12/A College Street, 2nd Floor, Kolkata, West Bengal - 700073, India<br>
+                <strong>Email:</strong> grievance@debsulit.com<br>
+                <strong>Response Window:</strong> Acknowledged within 48 hours; resolved within 30 days.
+            </div>
+
+            <div class="dsl-policy-contact-box">
+                <h3 style="margin-top: 0;">Have a Privacy Inquiry?</h3>
+                <p>For questions or requests regarding your personal data, contact our data protection desk:</p>
+                <p>Email: privacy@debsulit.com or support@debsulit.com<br>
+                Desk Hours: Monday – Saturday, 10:00 AM – 6:00 PM IST</p>
+            </div>
+        </div>
+    </article>
+</main>
+
+{% include './footer.html' %}

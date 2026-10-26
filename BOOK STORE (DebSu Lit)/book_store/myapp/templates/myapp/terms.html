@@ -1,0 +1,67 @@
+{% load static %}
+{% include './header.html' %}
+
+<main class="dsl-container dsl-policy-container">
+    <article class="dsl-policy">
+        <header class="dsl-policy-header">
+            <span class="dsl-kicker">Legal Terms</span>
+            <h1 class="dsl-policy-title">Terms &amp; Conditions</h1>
+            <p class="dsl-policy-meta">Last Updated: October 18, 2026 · Reader Agreement</p>
+        </header>
+
+        <div class="dsl-policy-summary">
+            <strong>Agreement Overview:</strong> These Terms and Conditions govern your access to and use of the DebSu Lit online bookstore. By registering an account, placing an order, or browsing our catalog, you agree to be bound by these terms in their entirety.
+        </div>
+
+        <div class="dsl-policy-body">
+            <h2>1. Who We Are</h2>
+            <p>DebSu Lit is operated by DebSu Lit Books Private Limited, registered at 12/A College Street, 2nd Floor, Kolkata, West Bengal - 700073, India ("we", "us", "our"). Complete contact and escalation channels are published on our <a href="{% url 'contact' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Contact Us</a> page.</p>
+
+            <h2>2. Eligibility and Account Management</h2>
+            <ul>
+                <li>You must be at least 18 years of age to register and place orders. Individuals under 18 may purchase titles only under the active supervision of a parent or legal guardian.</li>
+                <li>An account is required to maintain a persistent cart, bookmark titles, and complete purchases. Accounts may be created using email credentials or seamless Google single sign-on.</li>
+                <li>You are responsible for maintaining the confidentiality of your login credentials and for all activities conducted through your account.</li>
+                <li>Users agree to provide true, current, and complete delivery and identity details (full name, email address, delivery street address, and valid pincode). Orders with inaccurate shipping destinations may be cancelled or delayed.</li>
+            </ul>
+
+            <h2>3. Catalog Information and Book Availability</h2>
+            <p>We make every diligent effort to display accurate book titles, authors, editions, ISBNs, page counts, languages, bindings, and high-fidelity cover imagery. Catalog data is curated from verified publishers and distributors. Minor packaging variations or cover design updates by publishers between print runs may occasionally occur.</p>
+
+            <h2>4. Pricing and Secure Payments</h2>
+            <ul>
+                <li>All listed prices are displayed in Indian Rupees (INR) and are inclusive of applicable goods and services taxes. Detailed fee breakdowns are described in our <a href="{% url 'pricing' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Pricing &amp; Payments Policy</a>.</li>
+                <li>The final cart total is computed server-side to prevent tampering. The total payable amount is clearly presented before opening the secure payment dialog.</li>
+                <li>All online transactions are securely encrypted and processed by Razorpay. DebSu Lit never collects, processes, or stores your debit/credit card numbers, CVV codes, net-banking credentials, or UPI PINs on internal servers.</li>
+                <li>If funds are debited from your account without an order confirmation being generated, our server will automatically reconcile the transaction within 24 business hours or initiate a complete refund to the original payment source.</li>
+            </ul>
+
+            <h2>5. Order Acceptance, Fulfillment, and Cancellations</h2>
+            <p>An order is legally confirmed once successful payment verification is received. We reserve the right to cancel orders in unforeseen events such as inventory stockouts, blatant typographical pricing discrepancies, or unserviceable courier destinations. In all such events, a 100% full refund is issued immediately. Detailed shipping procedures are governed by our <a href="{% url 'shipping_policy' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Shipping &amp; Delivery Policy</a>, and returns are covered under our <a href="{% url 'refund_policy' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Cancellation, Return &amp; Refund Policy</a>.</p>
+
+            <h2>6. Acceptable Platform Use</h2>
+            <p>You agree not to misuse or interfere with DebSu Lit's platform integrity. Prohibited activities include attempting unauthorized administrative access, introducing malicious code or automated scrapers that degrade platform availability, initiating fraudulent chargebacks, or attempting identity spoofing. Violations will result in immediate account termination and legal reporting.</p>
+
+            <h2>7. Intellectual Property</h2>
+            <p>All proprietary site graphics, branding elements, software code, stylesheets, and editorial content belong exclusively to DebSu Lit Books Private Limited. Book titles, cover illustrations, excerpts, and author biographies remain the copyrighted intellectual property of their respective creators and publishing houses, reproduced here under fair informational and resale distribution rights.</p>
+
+            <h2>8. Limitation of Liability</h2>
+            <p>To the maximum extent permissible under applicable Indian law, DebSu Lit shall not be liable for indirect, incidental, or consequential damages resulting from platform downtime, courier service interruptions caused by natural catastrophes, or third-party banking gateway outages. Nothing in these terms limits your statutory consumer protections under the Consumer Protection Act, 2019.</p>
+
+            <h2>9. Privacy &amp; Data Protection</h2>
+            <p>Your privacy and identity protection are fundamental to our architecture. How we collect, store, and safeguard your personal details is comprehensively outlined in our <a href="{% url 'privacy_policy' %}" style="color: var(--dsl-brand-primary); font-weight: 600;">Privacy Policy</a>.</p>
+
+            <h2>10. Governing Law &amp; Dispute Resolution</h2>
+            <p>These terms are governed by and construed under the laws of the Republic of India. In the event of any query, dispute, or grievance, readers are encouraged to contact our designated Grievance Officer directly. Any unresolved legal disputes shall be subject to the exclusive jurisdiction of the competent courts in Kolkata, West Bengal, India.</p>
+
+            <div class="dsl-policy-contact-box">
+                <h3 style="margin-top: 0;">Questions About Our Terms?</h3>
+                <p>For inquiries regarding our terms or legal inquiries, reach our administrative desk:</p>
+                <p>Email: legal@debsulit.com or support@debsulit.com<br>
+                Official Desk: Monday – Saturday, 10:00 AM – 6:00 PM IST</p>
+            </div>
+        </div>
+    </article>
+</main>
+
+{% include './footer.html' %}
